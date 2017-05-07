@@ -59,7 +59,7 @@ namespace Domain.Drawing
 
             foreach(Piece piece in controller.Board.Pieces)
             {
-                if (piece.Team == PieceTeam.Team1)
+                if (piece.Team == Team.Team1)
                 {
                     brush = team1Brush;
                 }

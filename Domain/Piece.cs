@@ -7,21 +7,17 @@ using System.Threading.Tasks;
 namespace Domain
 {
 
-    public enum PieceTeam
-    {
-        Team1, Team2
-    }
 
     public class Piece
     {
 
 
-        public PieceTeam Team;
+        public Team Team;
         public bool IsKing;
         private Square currentSquare;
 
 
-        public Piece(PieceTeam team, Square currentSquare)
+        public Piece(Team team, Square currentSquare)
         {
             this.Team = team;
             this.IsKing = false;

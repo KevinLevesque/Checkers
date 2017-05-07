@@ -29,7 +29,7 @@ namespace Domain
             }
         }
 
-
+       
         public Square(SquareType type, int columnIndex, int rowIndex)
         {
             this.SquareType = type;

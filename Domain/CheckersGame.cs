@@ -9,8 +9,6 @@ using System.Windows.Forms;
 
 namespace Domain
 {
-    public enum Player { None, Player1, Player2 }
-
 
     public class CheckersGame
     {
@@ -20,14 +18,18 @@ namespace Domain
 
         private static CheckersGame instance;
 
+        public List<UIListener> listeners;
+
         public Board Board { get; private set; }
+
+        public CheckersMoveLogger logger;
 
         public Piece HilightedPiece { get; private set; }
         public Piece SelectedPiece { get; private set; }
         public List<Piece> PiecesAllowedToMove { get; set; }
         public List<CheckersMove> Moves { get; private set; }
-        public Player CurrentPlayer;
-        public Player Winner;
+        public Team CurrentPlayer;
+        
 
         public bool ForceKill = false;
 
@@ -52,16 +54,9 @@ namespace Domain
 
         public CheckersGame()
         {
-            Board = new Board();
-            MousePosition = new Point(0, 0);
-            Moves = new List<CheckersMove>();
-            
+            listeners = new List<UIListener>();
 
-            CreatePieces();
-
-            CurrentPlayer = Player.Player2;
-            Winner = Player.None;
-            NextTurn();
+            Reset();
         }
 
 
@@ -90,7 +85,7 @@ namespace Domain
                 {
                     foreach (Square square in Board.Squares.getRow(row).Where(x => x.SquareType == SquareType.dark))
                     {
-                        Board.AddPiece((row < 3) ? PieceTeam.Team1 : PieceTeam.Team2, square);
+                        Board.AddPiece((row < 3) ? Team.Team1 : Team.Team2, square);
                     }
                 }                    
             }
@@ -104,7 +99,7 @@ namespace Domain
                 CheckersMove move = Board.getAllowedMoveAtPoint(SelectedPiece, this.MousePosition, true);
                 if (move != null)
                 {
-                    Board.MovePiece(move);
+                    Board.MovePiece(move, logger);
                     if (Board.getKillMovesForPiece(move.Piece).Count == 0)
                     {
                         NextTurn();
@@ -123,7 +118,7 @@ namespace Domain
                 CheckersMove move = Board.getAllowedMoveAtPoint(SelectedPiece, this.MousePosition);
                 if (move != null)
                 {
-                    Board.MovePiece(move);
+                    Board.MovePiece(move, logger);
                     //Si on a tué aucune pièce ou qu'on ne peut pas en tuer d'autre, on passe au prochain tour
                     if(move.KilledPiece == null || (move.KilledPiece != null && Board.getKillMovesForPiece(move.Piece).Count == 0))
                     {
@@ -147,7 +142,7 @@ namespace Domain
 
             if (SelectedPiece != null)
             {
-                if ((SelectedPiece.Team == PieceTeam.Team1 && CurrentPlayer == Player.Player1) || (SelectedPiece.Team == PieceTeam.Team2 && CurrentPlayer == Player.Player2))
+                if ((SelectedPiece.Team == Team.Team1 && CurrentPlayer == Team.Team1) || (SelectedPiece.Team == Team.Team2 && CurrentPlayer == Team.Team2))
                     Moves = Board.getAllowedMovesForPiece(SelectedPiece);
                 else
                     SelectedPiece = null;
@@ -164,20 +159,60 @@ namespace Domain
 
         public void NextTurn()
         {
-            CurrentPlayer = (CurrentPlayer == Player.Player1) ? Player.Player2 : Player.Player1;
+            CurrentPlayer = (CurrentPlayer == Team.Team1) ? Team.Team2: Team.Team1;
             ForceKill = false;
             SelectedPiece = null;
             Moves.Clear();
 
+            notifyUpdateCurrentPlayer(CurrentPlayer == Team.Team1 ? "Joueur 1" : "Joueur 2");
 
-            PiecesAllowedToMove = Board.GetPiecesAllowedToMove(CurrentPlayer == Player.Player1 ?PieceTeam.Team1 :PieceTeam.Team2);
+            PiecesAllowedToMove = Board.GetPiecesAllowedToMove(CurrentPlayer == Team.Team1 ? Team.Team1 : Team.Team2);
             if(PiecesAllowedToMove.Count == 0)
             {
-                Winner = CurrentPlayer == Player.Player1 ? Player.Player2 : Player.Player1;
+                Team Winner = (CurrentPlayer == Team.Team1 ? Team.Team2 : Team.Team1);
+                notifyUpdateWinner(Winner == Team.Team1 ? "Joueur 1" : "Joueur 2");
             }
             
 
             //ToDo : Le joueur n'a peut-être aucune posibilité de mouvement, l'autre joueur gagne automatiquement
+        }
+
+
+        public void addToUIListeners(UIListener listener)
+        {
+            listeners.Add(listener);
+        }
+
+ 
+        public void notifyUpdateWinner(string winner)
+        {
+            foreach (UIListener listener in listeners)
+            {
+                listener.UpdateWinner(winner);
+            }
+        }
+
+        public void notifyUpdateCurrentPlayer(string currentPlayer)
+        {
+            foreach (UIListener listener in listeners)
+            {
+                listener.UpdateCurrentPlayer(currentPlayer);
+            }
+        }
+
+        public void Reset()
+        {
+            Board = new Board();
+            MousePosition = new Point(0, 0);
+            Moves = new List<CheckersMove>();
+            logger = new CheckersMoveLogger(listeners);
+
+
+
+            CreatePieces();
+
+            CurrentPlayer = Team.Team2;
+            NextTurn();
         }
     }
 }

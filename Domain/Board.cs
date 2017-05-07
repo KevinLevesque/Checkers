@@ -44,7 +44,7 @@ namespace Domain
         }
 
 
-        public void AddPiece(PieceTeam team, int colIndexPos, int rowIndexPos)
+        public void AddPiece(Team team, int colIndexPos, int rowIndexPos)
         {
             Square square = Squares.findBySquareColAndIndex(colIndexPos, rowIndexPos);
 
@@ -52,7 +52,7 @@ namespace Domain
             Pieces.Add(piece);
         }
 
-        public void AddPiece(PieceTeam team, Square square)
+        public void AddPiece(Team team, Square square)
         {
             Piece piece = new Piece(team, square);
             Pieces.Add(piece);
@@ -91,8 +91,11 @@ namespace Domain
             return point;
         }
 
-        public void MovePiece(CheckersMove move)
+        public void MovePiece(CheckersMove move, CheckersMoveLogger logger)
         {
+
+            logger.addLog(new CheckersLog(move));
+
             move.Piece.CurrentSquare = move.DestinationSquare;
 
 
@@ -101,9 +104,9 @@ namespace Domain
 
 
 
-            if (move.DestinationSquare.RowIndex == 0 && move.Piece.Team == PieceTeam.Team2)
+            if (move.DestinationSquare.RowIndex == 0 && move.Piece.Team == Team.Team2)
                 move.Piece.IsKing = true;
-            else if (move.DestinationSquare.RowIndex == this.Size.Height - 1 && move.Piece.Team == PieceTeam.Team1)
+            else if (move.DestinationSquare.RowIndex == this.Size.Height - 1 && move.Piece.Team == Team.Team1)
                 move.Piece.IsKing = true;
             
         }
@@ -168,7 +171,7 @@ namespace Domain
             int colIndex = piece.CurrentSquare.ColumnIndex;
             int rowIndex = piece.CurrentSquare.RowIndex;
 
-            if (piece.IsKing == true || (piece.Team == PieceTeam.Team1 && piece.IsKing == false))
+            if (piece.IsKing == true || (piece.Team == Team.Team1 && piece.IsKing == false))
             {
                 standardMovesSquares.Add(Squares.findBySquareColAndIndex(colIndex - 1, rowIndex + 1));
                 standardMovesSquares.Add(Squares.findBySquareColAndIndex(colIndex + 1, rowIndex + 1));
@@ -176,7 +179,7 @@ namespace Domain
                 killMovesSquares.Add(Squares.findBySquareColAndIndex(colIndex + 2, rowIndex + 2));
             }
 
-            if (piece.IsKing == true || (piece.Team == PieceTeam.Team2 && piece.IsKing == false))
+            if (piece.IsKing == true || (piece.Team == Team.Team2 && piece.IsKing == false))
             {
                 standardMovesSquares.Add(Squares.findBySquareColAndIndex(colIndex + 1, rowIndex - 1));
                 standardMovesSquares.Add(Squares.findBySquareColAndIndex(colIndex - 1, rowIndex - 1));
@@ -222,7 +225,7 @@ namespace Domain
 
 
 
-        public List<Piece> GetPiecesAllowedToMove(PieceTeam team)
+        public List<Piece> GetPiecesAllowedToMove(Team team)
         {
             List<Piece> piecesAllowedToMove = new List<Piece>();
             List<Piece> pieces = Pieces.Where(x => x.Team == team).ToList<Piece>();
@@ -242,7 +245,7 @@ namespace Domain
             return piecesAllowedToMove;
         }
 
-        public int PiecesCountByTeam(PieceTeam team)
+        public int PiecesCountByTeam(Team team)
         {
             return Pieces.Count(x => x.Team == team);
         }
