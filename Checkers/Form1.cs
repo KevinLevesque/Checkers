@@ -1,5 +1,7 @@
 ﻿using Domain;
 using System;
+using System.Diagnostics;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Checkers
@@ -7,6 +9,7 @@ namespace Checkers
     public partial class Form1 : Form, UIListener
     {
         CheckersGame controller;
+        Thread thread;
 
         public Form1()
         {
@@ -18,6 +21,51 @@ namespace Checkers
             gamePanel2.Paint += GamePanel2_Paint;
             gamePanel2.AllowDrop = true;
             richTextBox1.Enabled = false;
+
+            thread = new Thread(GameLoop);
+            thread.Start();
+        }
+
+        private void GameLoop()
+        {
+            int TARGET_FPS = 60;
+            int waitBetweenFrames = 1000 / TARGET_FPS;
+
+
+            Stopwatch swFpsCount = new Stopwatch();
+            Stopwatch sw = new Stopwatch();
+
+
+            swFpsCount.Start();
+            int framesCount = 0;
+
+
+            sw.Start();
+
+            while (true)
+            {
+                
+                this.Invoke(new MethodInvoker(delegate { gamePanel2.Refresh(); }));
+
+                if(swFpsCount.ElapsedMilliseconds < 1000)
+                {
+                    framesCount++;
+                }
+                else
+                {
+                    this.Invoke(new MethodInvoker(delegate { label1.Text = framesCount.ToString() + " fps"; })); 
+                    framesCount = 1;
+                    swFpsCount.Restart();
+                }
+
+                int elapsedMS = (int)sw.ElapsedMilliseconds;
+                if(elapsedMS < waitBetweenFrames)
+                {
+                    Thread.Sleep(waitBetweenFrames - elapsedMS);
+                }
+
+                sw.Restart();
+            }
         }
 
         private void GamePanel2_Paint(object sender, PaintEventArgs e)
@@ -28,7 +76,6 @@ namespace Checkers
         private void gamePanel2_MouseMove(object sender, MouseEventArgs e)
         {
             controller.MousePosition = e.Location;
-            gamePanel2.Refresh();
         }
 
         public void UpdateLog(string log)
@@ -73,6 +120,11 @@ namespace Checkers
         {
             controller.MouseUp();
             gamePanel2.Refresh();
+        }
+
+        private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            thread.Abort();
         }
     }
 }

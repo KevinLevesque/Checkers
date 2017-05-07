@@ -39,6 +39,7 @@
             this.fichierToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.nouvellePartieToolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
             this.lblCurrentPlayer = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.gamePanel2 = new Checkers.GamePanel();
             this.contextMenuStrip1.SuspendLayout();
             this.contextMenuStrip3.SuspendLayout();
@@ -118,6 +119,15 @@
             this.lblCurrentPlayer.TabIndex = 6;
             this.lblCurrentPlayer.Text = "label1";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(447, 43);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(35, 13);
+            this.label1.TabIndex = 7;
+            this.label1.Text = "label1";
+            // 
             // gamePanel2
             // 
             this.gamePanel2.Location = new System.Drawing.Point(25, 62);
@@ -131,6 +141,7 @@
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(1187, 716);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.lblCurrentPlayer);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.richTextBox1);
@@ -140,6 +151,7 @@
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Form1";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
             this.contextMenuStrip1.ResumeLayout(false);
             this.contextMenuStrip3.ResumeLayout(false);
             this.menuStrip1.ResumeLayout(false);
@@ -162,6 +174,7 @@
         private System.Windows.Forms.ToolStripMenuItem fichierToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem nouvellePartieToolStripMenuItem2;
         private System.Windows.Forms.Label lblCurrentPlayer;
+        private System.Windows.Forms.Label label1;
     }
 }
 
