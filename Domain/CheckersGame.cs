@@ -29,6 +29,11 @@ namespace Domain
         public List<Piece> PiecesAllowedToMove { get; set; }
         public List<CheckersMove> Moves { get; private set; }
         public Team CurrentPlayer;
+
+        public bool dragingPiece = false;
+        public int dragOffsetX;
+        public int dragOffsetY;
+        
         
 
         public bool ForceKill = false;
@@ -94,6 +99,76 @@ namespace Domain
 
         public void ClickOnBoard()
         {
+            /*
+           if (ForceKill)
+           {
+               CheckersMove move = Board.getAllowedMoveAtPoint(SelectedPiece, this.MousePosition, true);
+               if (move != null)
+               {
+                   Board.MovePiece(move, logger);
+                   if (Board.getKillMovesForPiece(move.Piece).Count == 0)
+                   {
+                       NextTurn();
+                   }
+                   else
+                   {
+                       Moves = Board.getKillMovesForPiece(SelectedPiece);
+                   }
+               }
+               return;
+           }
+
+
+           if (SelectedPiece != null)
+           {
+               CheckersMove move = Board.getAllowedMoveAtPoint(SelectedPiece, this.MousePosition);
+               if (move != null)
+               {
+                   Board.MovePiece(move, logger);
+                   //Si on a tué aucune pièce ou qu'on ne peut pas en tuer d'autre, on passe au prochain tour
+                   if(move.KilledPiece == null || (move.KilledPiece != null && Board.getKillMovesForPiece(move.Piece).Count == 0))
+                   {
+                       NextTurn();
+                   }
+                   else
+                   {
+                       ForceKill = true;
+                       Moves = Board.getKillMovesForPiece(SelectedPiece);
+
+                   }
+                   return;
+               }                
+           }
+
+
+           SelectedPiece = Board.getPieceAtPoint(this.MousePosition);
+
+           if (!PiecesAllowedToMove.Contains(SelectedPiece))
+               SelectedPiece = null;
+
+           if (SelectedPiece != null)
+           {
+               if ((SelectedPiece.Team == Team.Team1 && CurrentPlayer == Team.Team1) || (SelectedPiece.Team == Team.Team2 && CurrentPlayer == Team.Team2))
+                   Moves = Board.getAllowedMovesForPiece(SelectedPiece);
+               else
+                   SelectedPiece = null;
+
+           }
+           else
+           {
+               Moves.Clear();
+               SelectedPiece = null;
+           }
+           */
+
+        }
+
+        public void MouseUp()
+        {
+
+
+
+
             if (ForceKill)
             {
                 CheckersMove move = Board.getAllowedMoveAtPoint(SelectedPiece, this.MousePosition, true);
@@ -120,7 +195,7 @@ namespace Domain
                 {
                     Board.MovePiece(move, logger);
                     //Si on a tué aucune pièce ou qu'on ne peut pas en tuer d'autre, on passe au prochain tour
-                    if(move.KilledPiece == null || (move.KilledPiece != null && Board.getKillMovesForPiece(move.Piece).Count == 0))
+                    if (move.KilledPiece == null || (move.KilledPiece != null && Board.getKillMovesForPiece(move.Piece).Count == 0))
                     {
                         NextTurn();
                     }
@@ -128,34 +203,41 @@ namespace Domain
                     {
                         ForceKill = true;
                         Moves = Board.getKillMovesForPiece(SelectedPiece);
-                        
+                        PiecesAllowedToMove.RemoveAll(piece => piece != SelectedPiece);
+
                     }
                     return;
-                }                
-            }
-            
-            
-            SelectedPiece = Board.getPieceAtPoint(this.MousePosition);
-
-            if (!PiecesAllowedToMove.Contains(SelectedPiece))
-                SelectedPiece = null;
-
-            if (SelectedPiece != null)
-            {
-                if ((SelectedPiece.Team == Team.Team1 && CurrentPlayer == Team.Team1) || (SelectedPiece.Team == Team.Team2 && CurrentPlayer == Team.Team2))
-                    Moves = Board.getAllowedMovesForPiece(SelectedPiece);
-                else
-                    SelectedPiece = null;
-
-            }
-            else
-            {
-                Moves.Clear();
-                SelectedPiece = null;
+                }
             }
 
+
+            Moves.Clear();
+            SelectedPiece = null;
+            dragingPiece = false;
         }
 
+        public void MouseDown()
+        {
+            Piece pieceAtPosition;
+            pieceAtPosition = Board.getPieceAtPoint(this.MousePosition);
+
+            if (!PiecesAllowedToMove.Contains(pieceAtPosition))
+                return;
+
+
+            if (pieceAtPosition != null)
+            {
+                if ((pieceAtPosition.Team == Team.Team1 && CurrentPlayer == Team.Team1) || (pieceAtPosition.Team == Team.Team2 && CurrentPlayer == Team.Team2))
+                {
+                    SelectedPiece = pieceAtPosition;
+                    Moves = Board.getAllowedMovesForPiece(SelectedPiece);
+                    dragingPiece = true;
+                    dragOffsetX = Board.getPiecePosition(SelectedPiece).X - mousePosition.X;
+                    dragOffsetY = Board.getPiecePosition(SelectedPiece).Y - mousePosition.Y;
+                }
+            }
+      
+        }
 
         public void NextTurn()
         {

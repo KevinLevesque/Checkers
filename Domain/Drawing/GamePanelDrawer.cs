@@ -73,7 +73,14 @@ namespace Domain.Drawing
                     brush = new SolidBrush(Color.Yellow);
 
 
-                g.FillEllipse(brush, new Rectangle(controller.Board.getPiecePosition(piece), controller.Board.getPieceSize()));
+                if(!controller.dragingPiece || controller.SelectedPiece != piece)
+                    g.FillEllipse(brush, new Rectangle(controller.Board.getPiecePosition(piece), controller.Board.getPieceSize()));
+                else
+                {
+                    Point p = controller.MousePosition;
+                    p.Offset(controller.dragOffsetX, controller.dragOffsetY);
+                    g.FillEllipse(brush, new Rectangle(p, controller.Board.getPieceSize()));
+                }
 
                 if (piece.IsKing)
                 {

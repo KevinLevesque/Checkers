@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -24,6 +25,7 @@ namespace Checkers
             controller = CheckersGame.getInstance();
             controller.addToUIListeners(this);
             gamePanel2.Paint += GamePanel2_Paint;
+            gamePanel2.AllowDrop = true;
             richTextBox1.Enabled = false;
         }
 
@@ -64,7 +66,7 @@ namespace Checkers
             if (richTextBox1.Text.Length > 0)
                 richTextBox1.Text += "\r\n";
 
-            richTextBox1.Text += "VICTOIRE du joueur : " + winner + "." + "Allez dans le menu 'Jeu' > 'Nouvelle partie' pour jouer à nouveau";
+            richTextBox1.Text += "VICTOIRE du joueur : " + winner + "." + "Allez dans le menu 'Dames' > 'Nouvelle partie' pour jouer à nouveau";
             richTextBox1.SelectionStart = richTextBox1.Text.Length;
             richTextBox1.ScrollToCaret();
         }
@@ -79,6 +81,23 @@ namespace Checkers
             controller.Reset();
             gamePanel2.Refresh();
             richTextBox1.Clear();
+        }
+
+        private void gamePanel2_DragDrop(object sender, DragEventArgs e)
+        {
+            Debug.Write("dsfa");
+        }
+
+        private void gamePanel2_MouseDown(object sender, MouseEventArgs e)
+        {
+            controller.MouseDown();
+            gamePanel2.Refresh();
+        }
+
+        private void gamePanel2_MouseUp(object sender, MouseEventArgs e)
+        {
+            controller.MouseUp();
+            gamePanel2.Refresh();
         }
     }
 }

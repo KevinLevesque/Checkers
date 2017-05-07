@@ -125,8 +125,11 @@
             this.gamePanel2.Size = new System.Drawing.Size(622, 628);
             this.gamePanel2.TabIndex = 0;
             this.gamePanel2.Click += new System.EventHandler(this.gamePanel2_Click);
+            this.gamePanel2.DragDrop += new System.Windows.Forms.DragEventHandler(this.gamePanel2_DragDrop);
             this.gamePanel2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.gamePanel2_MouseClick);
+            this.gamePanel2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gamePanel2_MouseDown);
             this.gamePanel2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.gamePanel2_MouseMove);
+            this.gamePanel2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gamePanel2_MouseUp);
             // 
             // Form1
             // 
