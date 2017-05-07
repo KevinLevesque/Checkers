@@ -49,7 +49,7 @@
             // 
             this.richTextBox1.Location = new System.Drawing.Point(653, 62);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(581, 628);
+            this.richTextBox1.Size = new System.Drawing.Size(520, 628);
             this.richTextBox1.TabIndex = 1;
             this.richTextBox1.Text = "";
             // 
@@ -90,7 +90,7 @@
             this.fichierToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(1251, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(1187, 24);
             this.menuStrip1.TabIndex = 5;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -124,21 +124,21 @@
             this.gamePanel2.Name = "gamePanel2";
             this.gamePanel2.Size = new System.Drawing.Size(622, 628);
             this.gamePanel2.TabIndex = 0;
-            this.gamePanel2.Click += new System.EventHandler(this.gamePanel2_Click);
-            this.gamePanel2.DragDrop += new System.Windows.Forms.DragEventHandler(this.gamePanel2_DragDrop);
-            this.gamePanel2.MouseClick += new System.Windows.Forms.MouseEventHandler(this.gamePanel2_MouseClick);
             this.gamePanel2.MouseDown += new System.Windows.Forms.MouseEventHandler(this.gamePanel2_MouseDown);
             this.gamePanel2.MouseMove += new System.Windows.Forms.MouseEventHandler(this.gamePanel2_MouseMove);
             this.gamePanel2.MouseUp += new System.Windows.Forms.MouseEventHandler(this.gamePanel2_MouseUp);
             // 
             // Form1
             // 
-            this.ClientSize = new System.Drawing.Size(1251, 716);
+            this.ClientSize = new System.Drawing.Size(1187, 716);
             this.Controls.Add(this.lblCurrentPlayer);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.gamePanel2);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
+            this.MaximizeBox = false;
+            this.MinimizeBox = false;
             this.Name = "Form1";
             this.contextMenuStrip1.ResumeLayout(false);
             this.contextMenuStrip3.ResumeLayout(false);

@@ -1,15 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Domain
 {
     public class Board
     {
-
         public SquaresCollection Squares;
 
         public List<Piece> Pieces;
@@ -25,9 +21,7 @@ namespace Domain
             this.Squares = new SquaresCollection();
             this.Pieces = new List<Piece>();
 
-            SquareType squareType = SquareType.dark;
-
-            
+            SquareType squareType = SquareType.dark;            
 
             for(int col = 0; col < this.Size.Height; col++)
             {
@@ -42,7 +36,6 @@ namespace Domain
                 }
             }            
         }
-
 
         public void AddPiece(Team team, int colIndexPos, int rowIndexPos)
         {
@@ -59,7 +52,6 @@ namespace Domain
         }
 
 
-
         public Point getSquarePosition(Square square)
         {
             return new Point(square.ColumnIndex * this.SquareWidth, square.RowIndex * this.SquareWidth);
@@ -69,7 +61,6 @@ namespace Domain
         {
             return new Size(this.SquareWidth, this.SquareWidth);
         }
-
 
         public Point getPiecePosition(Piece piece)
         {
@@ -93,22 +84,16 @@ namespace Domain
 
         public void MovePiece(CheckersMove move, CheckersMoveLogger logger)
         {
-
             logger.addLog(new CheckersLog(move));
-
             move.Piece.CurrentSquare = move.DestinationSquare;
-
 
             if(move.KilledPiece != null)
                 deletePiece(move.KilledPiece);
 
-
-
             if (move.DestinationSquare.RowIndex == 0 && move.Piece.Team == Team.Team2)
                 move.Piece.IsKing = true;
             else if (move.DestinationSquare.RowIndex == this.Size.Height - 1 && move.Piece.Team == Team.Team1)
-                move.Piece.IsKing = true;
-            
+                move.Piece.IsKing = true;            
         }
 
         private void deletePiece(Piece piece)
@@ -121,7 +106,6 @@ namespace Domain
         {
             return new Size(this.PieceSize, this.PieceSize);
         }
-
 
         public Piece getPieceAtPoint(Point point)
         {
@@ -159,8 +143,6 @@ namespace Domain
             return null;
         }
 
-
-
         public List<CheckersMove> getAllowedMovesForPiece(Piece piece)
         {
             List<CheckersMove> moves = new List<CheckersMove>();
@@ -186,7 +168,6 @@ namespace Domain
                 killMovesSquares.Add(Squares.findBySquareColAndIndex(colIndex + 2, rowIndex - 2));
                 killMovesSquares.Add(Squares.findBySquareColAndIndex(colIndex - 2, rowIndex - 2));
             }
-
            
             for(int x = 0; x < standardMovesSquares.Count; x++)
             {
@@ -216,15 +197,11 @@ namespace Domain
             return moves;
         }
 
-
         public List<CheckersMove> getKillMovesForPiece(Piece piece)
         {
             return this.getAllowedMovesForPiece(piece).Where(x => x.KilledPiece != null).ToList<CheckersMove>();
         }
         
-
-
-
         public List<Piece> GetPiecesAllowedToMove(Team team)
         {
             List<Piece> piecesAllowedToMove = new List<Piece>();
@@ -250,9 +227,6 @@ namespace Domain
             return Pieces.Count(x => x.Team == team);
         }
 
-
-
-
         public Rectangle GetKingLogoPositionRectangle(Piece piece)
         {
             int rectWidth = 30;
@@ -265,12 +239,5 @@ namespace Domain
 
             return new Rectangle(position, new Size(rectWidth, rectHeight));
         }
-
-
-
-
-
-
-
     }
 }
